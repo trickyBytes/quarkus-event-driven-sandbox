@@ -1,3 +1,12 @@
 quarkus:
+
+  # Logging
   log:
-    level: DEBUG
+
+    console:
+      enable: true
+      format: &log-pattern "level=%p traceId=%X{traceId} spanId=%X{spanId} sampled=%X{sampled} class=%c{2.} thread=%t | %s%e%n"
+    level: INFO
+    category:
+      "com.akoolla":
+        level: DEBUG

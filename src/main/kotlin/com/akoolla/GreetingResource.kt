@@ -12,8 +12,7 @@ import jakarta.ws.rs.core.MediaType
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.Incoming
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.jboss.logging.Logger
 import java.util.concurrent.TimeUnit
 
 @ApplicationScoped
@@ -24,8 +23,8 @@ class GreetingResource(
     @Inject
     private var eventBus: EventBus
 ) {
-
-    val logger: Logger = LoggerFactory.getLogger(this::class.java.toString())
+    //Seems to be the best way of having pacakge name and then filtering on levels via log categories
+    val logger: Logger = Logger.getLogger(this::class.qualifiedName)
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -38,7 +37,7 @@ class GreetingResource(
 
         //Blocking Response (I/O Thread)
         val uni = thingListener("message")
-            .subscribe().with { item -> logger.debug(">> {}", item) }
+            .subscribe().with { item -> logger.debug(">> $item") }
 
         logger.debug("Sending response")
         return "Hello world"
@@ -55,8 +54,8 @@ class GreetingResource(
 
     @ConsumeEvent("greetings")
     fun eventConsumer(event: String) {
-        logger.debug("Received event {}", event)
+        logger.debug("Received event $event")
         TimeUnit.SECONDS.sleep(2) //Mimic API or external call (BigQuery write or FileSystem)
-        logger.debug("Actioned event event {}", event)
+        logger.debug("Actioned event event $event")
     }
 }
