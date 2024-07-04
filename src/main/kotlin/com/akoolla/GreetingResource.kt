@@ -23,7 +23,7 @@ class GreetingResource(
     @Inject
     private var eventBus: EventBus
 ) {
-    //Seems to be the best way of having pacakge name and then filtering on levels via log categories
+    //Seems to be the best way of having package name and then filtering on levels via log categories
     val logger: Logger = Logger.getLogger(this::class.qualifiedName)
 
     @GET
